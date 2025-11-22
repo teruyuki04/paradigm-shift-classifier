@@ -14,7 +14,8 @@ load_dotenv()
 
 class StartupAnalyzer:
     def __init__(self):
-        api_key = os.getenv("OPENAI_API_KEY")
+        # Check for both OPENAI_API_KEY and OpenAI_API_KEY
+        api_key = os.getenv("OPENAI_API_KEY") or os.getenv("OpenAI_API_KEY")
         self.client = OpenAI(api_key=api_key) if api_key else None
         
     async def analyze_startup(self, startup_name: str) -> Dict[str, Any]:
