@@ -1,10 +1,11 @@
 """
-Paradigm Shift 6-Layer Model (Fact-Based, 1990+ Startups)
+Paradigm Shift 6-Layer Model (Version 4.0 - Fact-Based, 1990+ Startups)
 """
 
 PARADIGM_LAYERS = [
     {
         "id": 0,
+        "level": "0️⃣",
         "name": "Pre-Shift",
         "jp_name": "未形成",
         "definition": "事業構造が確立せず、PMF未達で社会波及が観測ゼロの段階。",
@@ -18,6 +19,7 @@ PARADIGM_LAYERS = [
     },
     {
         "id": 1,
+        "level": "Ⅰ",
         "name": "Minimal Shift",
         "jp_name": "最小変化",
         "definition": "既存産業の改善・効率化までで、社会構造に変化を起こさない段階。",
@@ -30,6 +32,7 @@ PARADIGM_LAYERS = [
     },
     {
         "id": 2,
+        "level": "Ⅱ",
         "name": "Emerging Shift",
         "jp_name": "変化萌芽",
         "definition": "新しい市場構造・顧客行動が実データで観測され始めた段階。",
@@ -43,6 +46,7 @@ PARADIGM_LAYERS = [
     },
     {
         "id": 3,
+        "level": "Ⅲ",
         "name": "Structural Shift",
         "jp_name": "構造変化",
         "definition": "産業構造・商流・取引形態を実際に書き換えた段階。",
@@ -56,6 +60,7 @@ PARADIGM_LAYERS = [
     },
     {
         "id": 4,
+        "level": "Ⅳ",
         "name": "Systemic Shift",
         "jp_name": "制度変換",
         "definition": "企業構造が制度・政策・社会システムに組み込まれた段階。",
@@ -70,6 +75,7 @@ PARADIGM_LAYERS = [
     },
     {
         "id": 5,
+        "level": "Ⅴ",
         "name": "Paradigm Shift",
         "jp_name": "規範転換",
         "definition": "社会規範・文化・生活様式そのものを塗り替えた段階。",
