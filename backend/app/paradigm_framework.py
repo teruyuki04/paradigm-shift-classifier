@@ -1,84 +1,89 @@
 """
-Paradigm Shift 6-Layer Model (Fact-Based, 1990+ Startups)
+Paradigm Shift 6-Layer Model (Unified with Visualization Guide)
 """
 
 PARADIGM_LAYERS = [
     {
         "id": 0,
+        "level": "0️⃣",
         "name": "Pre-Shift",
-        "jp_name": "未形成",
-        "definition": "事業構造が確立せず、PMF未達で社会波及が観測ゼロの段階。",
+        "jp_name": "プレシフト",
+        "definition": "PMF前。事業仮説が崩壊、再構築中",
         "criteria": {
-            "revenue": "<20億円 or ARR <5億円",
+            "revenue": "ARR < 1億円",
             "pmf": "未達",
-            "growth": "売上成長が連続しない",
-            "pivot": "ピボット／撤退／縮小",
+            "status": "事業転換中、資金調達停止",
             "impact": {"structure": 0, "system": 0, "culture": 0}
         }
     },
     {
         "id": 1,
+        "level": "Ⅰ",
         "name": "Minimal Shift",
-        "jp_name": "最小変化",
-        "definition": "既存産業の改善・効率化までで、社会構造に変化を起こさない段階。",
+        "jp_name": "最小シフト",
+        "definition": "既存市場の改善型モデル。技術・UX改善中心",
         "criteria": {
-            "revenue": "20〜50億円 or ARR 5〜10億円",
-            "market": "既存市場内の利便性向上のみ",
-            "business_practice": "既存商慣習に準拠",
-            "impact": {"structure": 0, "system": 0, "culture": 0}
+            "revenue": "ARR 1〜5億円",
+            "market": "既存市場の改善型モデル",
+            "focus": "技術・UX改善中心",
+            "status": "NPS改善、初期顧客獲得",
+            "impact": {"structure": 1, "system": 0, "culture": 0}
         }
     },
     {
         "id": 2,
+        "level": "Ⅱ",
         "name": "Emerging Shift",
-        "jp_name": "変化萌芽",
-        "definition": "新しい市場構造・顧客行動が実データで観測され始めた段階。",
+        "jp_name": "変化萌芽シフト",
+        "definition": "新しい顧客・市場構造を形成し始める。既存業界の\"隙間\"で成立",
         "criteria": {
-            "revenue": "50〜150億円 or ARR 10〜30億円",
-            "behavior_change": "新カテゴリー・新行動がデータで確認可",
-            "industry_friction": "価格破壊・チャネル破壊などの摩擦",
-            "unit_economics": "LTV/リピートが既存産業を破壊し始める",
-            "transaction_change": "C2Cやフリーランス流通の拡張"
+            "revenue": "ARR 5〜20億円",
+            "market": "新しい顧客・市場構造を形成",
+            "position": "既存業界の隙間で成立",
+            "status": "PoC成功、シリーズB前後",
+            "impact": {"structure": 2, "system": 0, "culture": 0}
         }
     },
     {
         "id": 3,
+        "level": "Ⅲ",
         "name": "Structural Shift",
-        "jp_name": "構造変化",
-        "definition": "産業構造・商流・取引形態を実際に書き換えた段階。",
+        "jp_name": "構造シフト",
+        "definition": "既存プレイヤーを巻き込み、市場ルールや取引構造を再定義",
         "criteria": {
-            "revenue": "150〜500億円 or ARR 30〜100億円",
-            "industry_standard": "API標準／データ標準の獲得",
-            "market_share": "業界シェア構造に変化",
-            "flow_change": "商流・データ流の再設計",
-            "competitive_mimic": "競合の構造模倣が発生"
+            "revenue": "ARR 20〜100億円",
+            "market_impact": "市場ルールや取引構造を再定義",
+            "players": "既存プレイヤーを巻き込む",
+            "status": "業界標準化、シリーズC〜D",
+            "impact": {"structure": 3, "system": 1, "culture": 0}
         }
     },
     {
         "id": 4,
+        "level": "Ⅳ",
         "name": "Systemic Shift",
-        "jp_name": "制度変換",
-        "definition": "企業構造が制度・政策・社会システムに組み込まれた段階。",
+        "jp_name": "システムシフト",
+        "definition": "行政・規制・業界団体と連携し、新しい制度・仕組みを実装",
         "criteria": {
-            "revenue": "500〜1200億円 or ARR 100〜300億円",
-            "government_link": "行政・中央省庁との制度連携",
-            "rule_change": "業界団体のルール改定への影響",
-            "law_influence": "ガイドライン・法改正を誘発",
-            "infrastructure": "社会インフラとして位置付け",
-            "system_mimic": "他産業が構造を制度化して模倣"
+            "revenue": "ARR 100億円〜",
+            "government_link": "行政・規制・業界団体と連携",
+            "system_impact": "新しい制度・仕組みを実装",
+            "status": "社会制度・政策連動、IPO〜上場後",
+            "impact": {"structure": 4, "system": 4, "culture": 2}
         }
     },
     {
         "id": 5,
+        "level": "Ⅴ",
         "name": "Paradigm Shift",
-        "jp_name": "規範転換",
-        "definition": "社会規範・文化・生活様式そのものを塗り替えた段階。",
+        "jp_name": "パラダイムシフト",
+        "definition": "社会的価値観・生活様式を変え、文化的規範として定着",
         "criteria": {
-            "revenue": "1200億円〜",
-            "behavior_change": "国内外で行動変容が持続",
-            "ecosystem": "模倣産業・模倣企業がエコシステム化",
-            "culture_first": "文化の変化が制度より先行",
-            "category_name": "企業名がカテゴリー名化（Airbnb型など）"
+            "revenue": "ARR 300億円〜",
+            "cultural_impact": "社会的価値観・生活様式を変革",
+            "status": "文化現象化、海外波及",
+            "global": "グローバルな影響力",
+            "impact": {"structure": 5, "system": 5, "culture": 5}
         }
     }
 ]
