@@ -36,30 +36,19 @@ def is_company_category(categories: dict) -> bool:
     return False
 
 async def search_edinet(company_name: str) -> Optional[Dict[str, Any]]:
-    """Search for company in EDINET API"""
-    try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.get(
-                f"{EDINET_API_BASE}/documents.json",
-                params={
-                    "date": datetime.now().strftime("%Y-%m-%d"),
-                    "type": 2
-                }
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                return {
-                    "name": company_name,
-                    "revenue": "Data available via EDINET API",
-                    "description": "Listed company in Japan",
-                    "source": "EDINET",
-                    "confidence": 0.8
-                }
-    except Exception as e:
-        print(f"EDINET API error: {e}")
-        return None
+    """
+    Search for company in EDINET API
+    Note: This is a stub implementation. EDINET API requires proper document search
+    and parsing of financial reports to extract revenue data.
+    For now, returns None to avoid placeholder data in classification.
+    """
+    # TODO: Implement proper EDINET search:
+    # 1. Search for company by name using document search API
+    # 2. Find the latest financial report (有価証券報告書)
+    # 3. Parse the document to extract revenue data
+    # 4. Return structured data with actual revenue values
     
+    # For now, return None to avoid using placeholder data in classification
     return None
 
 async def search_wikipedia(company_name: str) -> Optional[Dict[str, Any]]:

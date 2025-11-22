@@ -25,7 +25,7 @@ class StartupAnalyzer:
         # First, collect data from all sources
         collected_data = await data_sources.search_all_sources(startup_name)
         
-        # Try data-driven analysis first
+        # Try data-driven analysis first (only if we have numeric revenue)
         if collected_data:
             result = self._data_driven_analysis(startup_name, collected_data)
             if result:
@@ -35,12 +35,12 @@ class StartupAnalyzer:
         # Fall back to AI analysis if available
         if self.client:
             try:
-                prompt = self._create_analysis_prompt(startup_name)
+                prompt = self._create_analysis_prompt(startup_name, collected_data)
                 
                 response = self.client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[
-                        {"role": "system", "content": "You are an expert startup analyst specializing in evaluating companies against the Paradigm Shift 6-Layer Model. You provide detailed, fact-based analysis."},
+                        {"role": "system", "content": "You are an expert startup analyst specializing in evaluating companies against the Paradigm Shift 6-Layer Model. You provide detailed, fact-based analysis using both quantitative (revenue) and qualitative (impact, behavior change, ecosystem) criteria."},
                         {"role": "user", "content": prompt}
                     ],
                     temperature=0.7,
@@ -60,8 +60,8 @@ class StartupAnalyzer:
         # Final fallback to knowledge base
         return self._fallback_analysis(startup_name, collected_data)
     
-    def _create_analysis_prompt(self, startup_name: str) -> str:
-        """Create a detailed prompt for AI analysis"""
+    def _create_analysis_prompt(self, startup_name: str, collected_data: List[Dict[str, Any]] = None) -> str:
+        """Create a detailed prompt for AI analysis with collected data context"""
         layers_description = "\n\n".join([
             f"Layer {layer['id']}: {layer['name']} ({layer['jp_name']})\n"
             f"Definition: {layer['definition']}\n"
@@ -69,21 +69,44 @@ class StartupAnalyzer:
             for layer in PARADIGM_LAYERS
         ])
         
+        collected_info = ""
+        if collected_data:
+            collected_info = "\n\nCollected Data:\n"
+            for source in collected_data:
+                collected_info += f"- Source: {source.get('source', 'Unknown')}\n"
+                if source.get('name'):
+                    collected_info += f"  Name: {source['name']}\n"
+                if source.get('revenue'):
+                    collected_info += f"  Revenue: {source['revenue']}\n"
+                if source.get('description'):
+                    desc = source['description'][:300]
+                    collected_info += f"  Description: {desc}...\n"
+                collected_info += f"  Confidence: {source.get('confidence', 0)}\n\n"
+        
         prompt = f"""Analyze the startup "{startup_name}" and determine which layer of the Paradigm Shift 6-Layer Model it belongs to.
 
-Framework Layers:
+Framework Layers (use these EXACTLY as defined):
 {layers_description}
 
+{collected_info}
+
 Instructions:
-1. Research your knowledge about {startup_name} (business model, revenue scale, market impact, industry changes)
-2. Evaluate against each layer's criteria
-3. Determine the most appropriate layer (0-5)
-4. Provide detailed reasoning citing specific facts
+1. Use the six layers EXACTLY as defined above (layer_id must be 0-5)
+2. When revenue information is available and reliable, use it as PRIMARY evidence for classification
+3. When revenue is unknown or uncertain, prioritize QUALITATIVE criteria:
+   - Behavior change (行動変容): Has the company changed how people behave?
+   - Ecosystem impact (エコシステム): Has it created a new industry or ecosystem?
+   - Cultural impact (文化変容): Has it changed social norms or culture?
+   - System integration (制度統合): Has it influenced regulations or government policy?
+   - Category naming (カテゴリー名化): Has the company name become synonymous with the category?
+4. For globally recognized companies with clear paradigm-shifting impact (e.g., transforming entire industries, changing cultural norms worldwide), consider higher layers even if revenue data is unavailable
+5. Evaluate against each layer's criteria comprehensively
+6. Provide detailed reasoning citing specific facts
 
 Response format (JSON):
 {{
     "layer_id": <0-5>,
-    "reasoning": "<detailed explanation with specific facts about revenue, market impact, structural changes, etc.>",
+    "reasoning": "<detailed explanation with specific facts about revenue (if available), market impact, structural changes, behavior change, ecosystem, cultural impact, etc.>",
     "criteria_met": {{
         "<criterion1>": "<explanation>",
         "<criterion2>": "<explanation>"
@@ -145,39 +168,36 @@ Be specific and fact-based. If the startup is not well-known or you lack informa
         layer_id = 0
         met_criteria = {}
         
-        if revenue_value is not None:
-            # Layer 5: ARR 300億円〜
-            if revenue_value >= 300:
-                layer_id = 5
-                met_criteria["revenue"] = f"売上規模: {revenue_str}"
-            # Layer 4: ARR 100億円〜
-            elif revenue_value >= 100:
-                layer_id = 4
-                met_criteria["revenue"] = f"売上規模: {revenue_str}"
-            # Layer 3: ARR 20〜100億円
-            elif revenue_value >= 20:
-                layer_id = 3
-                met_criteria["revenue"] = f"売上規模: {revenue_str}"
-            # Layer 2: ARR 5〜20億円
-            elif revenue_value >= 5:
-                layer_id = 2
-                met_criteria["revenue"] = f"売上規模: {revenue_str}"
-            # Layer 1: ARR 1〜5億円
-            elif revenue_value >= 1:
-                layer_id = 1
-                met_criteria["revenue"] = f"売上規模: {revenue_str}"
-            # Layer 0: ARR < 1億円
-            else:
-                layer_id = 0
-                met_criteria["revenue"] = f"売上規模: {revenue_str}"
+        if revenue_value is None:
+            # No numeric revenue data available - cannot classify via data-driven method
+            # Return None to fall through to AI analysis
+            return None
+        
+        # Classify based on revenue thresholds (in 億円)
+        # Layer 5: 1200億円〜 (Paradigm Shift)
+        if revenue_value >= 1200:
+            layer_id = 5
+            met_criteria["revenue"] = f"売上規模: {revenue_str}"
+        # Layer 4: 500〜1200億円 (Systemic Shift)
+        elif revenue_value >= 500:
+            layer_id = 4
+            met_criteria["revenue"] = f"売上規模: {revenue_str}"
+        # Layer 3: 150〜500億円 (Structural Shift)
+        elif revenue_value >= 150:
+            layer_id = 3
+            met_criteria["revenue"] = f"売上規模: {revenue_str}"
+        # Layer 2: 50〜150億円 (Emerging Shift)
+        elif revenue_value >= 50:
+            layer_id = 2
+            met_criteria["revenue"] = f"売上規模: {revenue_str}"
+        # Layer 1: 20〜50億円 (Minimal Shift)
+        elif revenue_value >= 20:
+            layer_id = 1
+            met_criteria["revenue"] = f"売上規模: {revenue_str}"
+        # Layer 0: <20億円 (Pre-Shift)
         else:
-            # No revenue data, use description-based heuristics
-            if any(keyword in description.lower() for keyword in ['グローバル', 'worldwide', 'global', '世界']):
-                layer_id = 3
-                met_criteria["description_analysis"] = "グローバル展開の可能性"
-            else:
-                layer_id = 1
-                met_criteria["description_analysis"] = "限定的な情報に基づく推定"
+            layer_id = 0
+            met_criteria["revenue"] = f"売上規模: {revenue_str}"
         
         layer_info = PARADIGM_LAYERS[layer_id]
         
