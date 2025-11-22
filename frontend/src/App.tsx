@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Loader2, Building2, Plus, Database, Globe, Layers } from 'lucide-react'
+import { Search, Loader2, Building2, Plus, Database, Globe } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -462,7 +462,6 @@ function App() {
             </div>
           </div>
         </div>
-      )}
 
         <div className="mt-8 text-center text-sm text-slate-500">
           <p>パラダイムシフト6階層モデル (1990年以降創業のスタートアップ対象)</p>
